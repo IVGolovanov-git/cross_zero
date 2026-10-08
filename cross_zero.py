@@ -1,16 +1,19 @@
-# Игракрестики - н олики
-# from colorama import Fore, Back, Style
+# Игра крестики - нолики
+from colorama import Fore, Back, Style
 
 
 # Рисуем игровое поле
 def draw_game_board(game_state):
-    print('--------')
-    print(f'|{game_state[0][0]}|{game_state[1][0]}|{game_state[2][0]}|')
-    print('--------')
-    print(f'|{game_state[0][1]}|{game_state[1][1]}|{game_state[2][1]}|')
-    print('--------')
-    print(f'|{game_state[0][2]}|{game_state[1][2]}|{game_state[2][2]}|')
-    print('--------')
+    print('------')
+    for y in range(3):
+        for x in range(3):
+            if game_state[x][y] == ' ':
+                print(Back.GREEN + ' '  + Style.RESET_ALL + '|', end = '')
+            elif game_state[x][y] == 'x':
+                print(Fore.RED + 'x' + Style.RESET_ALL + '|' , end = '' )
+            else:
+                print(Fore.BLUE + '0' + Style.RESET_ALL + '|' , end = '' )
+        print('\n------')
 
 
 # Запрашиваем ход игрока и проверяем корректность ввода координат
@@ -23,7 +26,6 @@ def get_move(game_state, user):
             x = int(x)
             y = int(y)
             if (0 <= x <= 2) and (0 <= y <= 2) and (game_state[x][y]) == ' ':
-                print(f'x = {x} y = {y} зачение [x][y]= "{game_state[x][y]}"')
                 return x,y
             else:
                 print(f'x = {x} y = {y} ')
@@ -82,16 +84,20 @@ def play_game():
         # Проверяем выигрыш
         if check_win(game_state, user):
             print(f'Победил участник {user} !!!')
-            return 0
+            break
 
         # Проверяем ничью
         if all(cell != " " for row in game_state for cell in row):
             print("Ничья!")
-            return 0
+            break
 
         # Передаем ход другому игроку
         user = '0' if user == 'x' else 'x'
-        # player = "0" if player == "X" else "X"
+    if str(input('Сиграем еще(y/n)? ')).strip() == 'y':
+        play_game()
+    else:
+        print('ИГРА ЗАВЕРШЕНА!')
+        return 0
 
 
 play_game()
